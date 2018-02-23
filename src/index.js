@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import Demo from './Demo';
 import registerServiceWorker from './registerServiceWorker';
+import Crud from "./Crud";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<Crud />, document.getElementById('root'));
 registerServiceWorker();

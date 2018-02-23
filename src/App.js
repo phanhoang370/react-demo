@@ -161,7 +161,7 @@ class App extends Component {
         </div>
     });
     return (
-      <div>
+      <div className="container">
      
         {/*<ReadQrcode />*/}
         <LegacyModeExample />
