@@ -5,13 +5,30 @@ import TaskItem from './TaskItem'
 class TaskList extends Component {
     constructor(props) {
         super(props);
+        this.state={
+            filterName:'',
+            filterStatus:-1
+        }
+    }
+    onChange=(event) => {
+        var target=event.target;
+        var name=target.name;
+        var value=target.value;
+        this.props.onFilter(
+            name === 'filterName' ? value : this.state.filterName,
+            name === 'filterStatus' ? value : this.state.filterStatus
+        );
+        this.setState({
+            [name]:value
+        });
     }
 
 
     render() {
         var {tasks} = this.props; //
+        var {filterName, filterStatus} = this.state;
         var elementTask =tasks.map((task, index) =>{
-            return <TaskItem key={task.id} index={index} task={task} />
+            return <TaskItem onUpdateStatus={this.props.onUpdateStatus} onUpdate={this.props.onUpdate}  onDeleteId={this.props.onDeleteId} key={task.id} index={index} task={task} />
         });
         return (
 
@@ -28,13 +45,13 @@ class TaskList extends Component {
                 <tr>
                     <td></td>
                     <td>
-                        <input type="text" className="form-control"/>
+                        <input type="text" className="form-control" name="filterName" value={filterName} onChange={this.onChange} />
                     </td>
                     <td>
-                        <select className="form-control">
-                            <option value="-1">Tất Cả</option>
-                            <option value="0">Ẩn</option>
-                            <option value="1">Kích Hoạt</option>
+                        <select className="form-control" name="filterStatus" value={filterStatus} onChange={this.onChange}>
+                            <option value={-1}>Tất Cả</option>
+                            <option value={0}>Ẩn</option>
+                            <option value={1}>Kích Hoạt</option>
                         </select>
                     </td>
                     <td></td>
