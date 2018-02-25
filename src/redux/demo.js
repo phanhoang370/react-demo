@@ -1,5 +1,6 @@
 import { createStore } from 'redux' ;
-//import todoApp from './reducers';
+import {status, sort}  from  './action/index';
+// import myReducer from './reducers/index';
 
 var initialState     = {
     status:false,
@@ -30,17 +31,21 @@ var myReducer = (state =initialState, action) => {
 
 const store = createStore(myReducer);
 console.log('defeult:',store.getState());
-var action={type:'toggle_status'};
-store.dispatch(action);
+// var action={type:'toggle_status'};
+
+store.dispatch(status());
 console.log('toggle_status:',store.getState());
 
-var sortAction = {
-    type:'sort',
-    sort:{
-        by:'name',
-        value:-1
-    }
-}
-store.dispatch(sortAction);
+// var sortAction = {
+//     type:'sort',
+//     sort:{
+//         by:'name',
+//         value:-1
+//     }
+// }
+store.dispatch(sort({
+    by:'name',
+    value:-1
+}));
 console.log('sort:',store.getState());
 
