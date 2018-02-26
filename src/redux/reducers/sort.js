@@ -8,15 +8,8 @@ var myReducer = (state =initialState, action) => {
 
     if(action.type === 'sort'){
         var {by, value} = action.sort;
-        var status=state;
 
-        return {
-            status:status,
-            sort:{
-                by:by,
-                value:value
-            }
-        }
+        return {by, value}
     }
     return state;
 }

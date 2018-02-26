@@ -4,14 +4,16 @@ import TaskForm from './components/TaskForm'
 import Control from './components/Control'
 import TaskList from './components/TaskList'
 import demo from './redux/demo'
+import {connect} from 'react-redux';
+import * as actions from './actions/index';
 
 
 class Crud extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tasks:[],
-            isDisplayForm: false,
+            // tasks:[],
+            // isDisplayForm: false,
             taskEdit:null,
             filter:{
                 name:'',
@@ -19,14 +21,14 @@ class Crud extends Component {
             }
         }
     }
-    componentWillMount(){
-        if(localStorage && localStorage.getItem('tasks')){
-            var tasks = JSON.parse(localStorage.getItem('tasks'));
-            this.setState({
-                tasks:tasks
-            })
-        }
-    }
+    // componentWillMount(){
+    //     if(localStorage && localStorage.getItem('tasks')){
+    //         var tasks = JSON.parse(localStorage.getItem('tasks'));
+    //         this.setState({
+    //             tasks:tasks
+    //         })
+    //     }
+    // }
 
     onGenerate=() => {
         var tasks = [
@@ -56,48 +58,48 @@ class Crud extends Component {
 
 
     }
-    s4(){
-        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-    }
-    generateID(){
-        return this.s4() + this.s4() + '-' + this.s4() + '-' + this.s4() + this.s4() +this.s4()+ this.s4()+ this.s4();
-    }
+    // s4(){
+    //     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    // }
+    // generateID(){
+    //     return this.s4() + this.s4() + '-' + this.s4() + '-' + this.s4() + this.s4() +this.s4()+ this.s4()+ this.s4();
+    // }
     onShowForm = () =>{
-        if(this.state.isDisplayForm && this.state.taskEdit !== null) {
-            this.setState({
-                isDisplayForm: true,
-                taskEdit:null
-            });
-        }else {
-            this.setState({
-                isDisplayForm: !this.state.isDisplayForm,
-                taskEdit:null
-            });
-        }
-
+        // if(this.state.isDisplayForm && this.state.taskEdit !== null) {
+        //     this.setState({
+        //         isDisplayForm: true,
+        //         taskEdit:null
+        //     });
+        // }else {
+        //     this.setState({
+        //         isDisplayForm: !this.state.isDisplayForm,
+        //         taskEdit:null
+        //     });
+        // }
+        this.props.onToggleForm();
     }
     onCloseForm = () => {
         this.setState({
             isDisplayForm:!this.state.isDisplayForm
         });
     }
-    onSubmit = (data) => {
-        var {tasks}= this.state;
-        if(data.id === ''){
-            data.id=this.generateID();
-            tasks.push(data);
-        }else {
-            var index = this.findIndex(data.id);
-            tasks[index] = data;
-        }
-
-        this.setState({
-            tasks:tasks,
-            taskEdit:null
-        });
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-
-    }
+    // onSubmit = (data) => {
+    //     var {tasks}= this.state;
+    //     if(data.id === ''){
+    //         data.id=this.generateID();
+    //         tasks.push(data);
+    //     }else {
+    //         var index = this.findIndex(data.id);
+    //         tasks[index] = data;
+    //     }
+    //
+    //     this.setState({
+    //         tasks:tasks,
+    //         taskEdit:null
+    //     });
+    //     localStorage.setItem('tasks', JSON.stringify(tasks));
+    //
+    // }
     onUpdateStatus = (id) => {
         var {tasks} = this.state;
         var index = this.findIndex(id);
@@ -162,9 +164,10 @@ class Crud extends Component {
         });
     }
     render() {
-    var {tasks, isDisplayForm, taskEdit, filter} = this.state;  //var tasks = this.state.tasks
+    var {tasks, taskEdit, filter} = this.state;  //var tasks = this.state.tasks
+        var {isDisplayForm} = this.props;
         // if(fi)
-    var elementTaskForm = isDisplayForm ? <TaskForm onForm={this.onCloseForm} task={taskEdit} onSubmit={this.onSubmit} /> :''
+    var elementTaskForm = isDisplayForm ? <TaskForm onForm={this.onCloseForm} task={taskEdit} /> :''
         return (
             <div className="container">
                 <div className="row">
@@ -184,7 +187,7 @@ class Crud extends Component {
 
                         <div className="row mt-15">
                             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <TaskList onFilter={this.onFilter} onUpdateStatus={this.onUpdateStatus} onUpdate={this.onUpdate} onDeleteId={this.onDeleteId} tasks={tasks} />
+                                <TaskList onFilter={this.onFilter} onUpdateStatus={this.onUpdateStatus} onUpdate={this.onUpdate} onDeleteId={this.onDeleteId}  />
                             </div>
                         </div>
                     </div>
@@ -194,4 +197,19 @@ class Crud extends Component {
     }
 }
 
-export default Crud;
+const mapStateToProps = (state) => {
+    return {
+        isDisplayForm:state.isDisplayForm
+    };
+};
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        onToggleForm : () => {
+            dispatch(actions.toggleForm());
+        },
+        onCloseForm : () => {
+            dispatch(actions.closeForm());
+        }
+    };
+};
+export default connect(mapStateToProps,mapDispatchToProps)(Crud);
